@@ -25,7 +25,9 @@ func (s *Client) GetObject(ctx context.Context, bucket string, key string) (*Get
 		return nil, fmt.Errorf("couldn't get file from S3: %w", err)
 	}
 
-	defer getOutput.Body.Close()
+	defer func() {
+		_ = getOutput.Body.Close()
+	}()
 
 	body, err := io.ReadAll(getOutput.Body)
 	if err != nil {
